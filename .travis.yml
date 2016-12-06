@@ -1,6 +1,13 @@
 language: go
 go:
-  - '1.7'
+- '1.7'
 script:
-  - make test
-  - make build
+- make test
+- make build
+deploy:
+  provider: releases
+  api_key:
+    secure: RHPcWCieVtglj9xULC19GcUv5Rzv8kpOktfiYwNyPcfGBxc6BiQIQ79zG6XOj/4iUZsAsVUOWwztFi9Xhr/Z0eEamNXN4ke1q5qG0nhBoExNToPqVUPG3bAWhZUNZ3tZC8bTEZ9nLFCl3lGbrN1fWfCtrbJqd902LBpn3MSlIbgAdMjBtNP2fCy3GfdpA0EDi/pGXewzR6is5kjS7UMOWS6RgH8xdd1k/I7Ghh+/8MI7iyK/ZSJnIUTlsbP9IM/yqdDfoD+a8WVr9qANcX4MgOnWW0LUCeeaV6gWEaQM//voqcfmdbkuh9c2ewkdgx+EwrHmcWhwxOdJIpVqFbycMz7nO+bPnv3FBn2B6YKDfd3JtLlmXa7dmgN4ANv40x6XTv6g/ApCbEud9dnf5OrFptLP8jtAbYsoPbf8pPDrgiFrJ5GmMTSlny9059vYIrP7a4pCHNnZrDWxN3xleTN2QyYNZHeU5z7zGteGTfWA0AxS5UDeorlSfxPQbJZb/8yA+Dm+D7Aaym/LQDd88BaetrAeRa5/XJl+HoP2HGwZ5LO++Xw/hxGNvcaaIcguQiBb6u0D789UAoQAor1IiWSrL9ebCJbnr8NwGJG5D2cF19OonHBwSP2e9H2j9i6K2uvb6uTR+mEl229h+0eBk3RtQ1VUIntwOL9niH+o2geb7Ys=
+  file: target/simpleview.linux.amd64
+  on:
+    repo: fatz/simpleview
