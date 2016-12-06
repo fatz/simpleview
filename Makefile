@@ -26,7 +26,7 @@ run:
 	go-bindata-assetfs -debug public
 	$(GOCMD) run bindata_assetfs.go main.go
 
-test:
+test: req
 	$(GOCMD) test
 
 bindatafs:
