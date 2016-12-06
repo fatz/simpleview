@@ -9,8 +9,11 @@ GOFMT=gofmt -w
 
 TARGET=$(PWD)/target
 
-build: bindatafs
+req:
 	go get github.com/tools/godep
+	godep restore
+
+build: req bindatafs
 	GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(TARGET)/simpleview.linux.amd64
 	GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(TARGET)/simpleview.darwin.amd64
 
@@ -27,4 +30,4 @@ test:
 bindatafs:
 	go-bindata-assetfs public
 
-all: test build
+all: req bindatafs test build
