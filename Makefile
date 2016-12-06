@@ -11,6 +11,9 @@ TARGET=$(PWD)/target
 
 req:
 	go get github.com/tools/godep
+  # get the go-bindata-assetfs
+  go get github.com/jteeuwen/go-bindata/...
+  go get github.com/elazarl/go-bindata-assetfs/...
 	godep restore
 
 build: req bindatafs
