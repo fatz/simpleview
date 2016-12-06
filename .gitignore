@@ -1,5 +1,6 @@
 # Target builds
 target/
+bindata_assetfs.go
 !target/.gitkeep
 # External packages folder
 vendor/
