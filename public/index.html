@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html ng-app="SimpleView">
+<head>
+  <link rel="stylesheet" type="text/css" href="simpleview.css">
+  <script src="angular.js"></script>
+  <script src="simpleview.js"></script>
+</head>
+
+<body class="{{bodyClass ? bodyClass : 'bodyerror'}}">
+  <div ng-controller="OverviewCtrl">
+    <div ng-repeat="down in downs">
+        <div class="msg down">{{down.name}}</div>
+      </ul>
+    </div>
+    <div ng-repeat="critical in criticals">
+        <div class="msg critical">{{critical.attrs.host_name}} - {{critical.attrs.display_name}}</div>
+      </ul>
+    </div>
+    <div ng-repeat="warn in warns">
+        <div class="msg warn">{{warn.attrs.host_name}} - {{warn.attrs.display_name}}</div>
+      </ul>
+    </div>
+  <div ng-if="!downs.length && !criticals.length && !warns.length && !error.length" class="msg">OK</div>
+  <div ng-if="error.length" class="msg">Error reaching backend data</div>
+</div>
+</body>
+</html>
