@@ -27,6 +27,7 @@ type Simpleview struct {
 	Cache          Overview
 	CacheTimeout   time.Duration
 	CacheRequest   time.Time
+	Debug          bool
 }
 
 type Host struct {
@@ -65,7 +66,9 @@ func (simpleview *Simpleview) getRequest(urlString string, filter string) (iresp
 
 	resp, err := client.Get(myurl.String())
 
-	fmt.Printf("%s\n", geturl)
+	if simpleview.Debug {
+		fmt.Printf("%s\n", geturl)
+	}
 
 	if err != nil {
 		err = fmt.Errorf("Request error: %s", err)
@@ -109,14 +112,14 @@ func (simpleview *Simpleview) getHosts() (jq []map[string]interface{}, err error
 	iresp, err := simpleview.getRequest(url, filter)
 	if err != nil {
 
-		fmt.Printf("request error %s", err)
+		err = fmt.Errorf("request error %s", err)
 		return
 	}
 
 	jq, err = iresp.ArrayOfObjects("results")
 
 	if err != nil {
-		fmt.Printf("object error %s", err)
+		err = fmt.Errorf("object error %s", err)
 		return
 	}
 
@@ -133,6 +136,7 @@ func (simpleview *Simpleview) getServices() (jq []map[string]interface{}, err er
 
 	iresp, err := simpleview.getRequest(url, filter)
 	if err != nil {
+		err = fmt.Errorf("request error %s", err)
 		return
 	}
 
@@ -141,6 +145,7 @@ func (simpleview *Simpleview) getServices() (jq []map[string]interface{}, err er
 	// fmt.Printf("%s", iresp)
 
 	if err != nil {
+		err = fmt.Errorf("object error %s", err)
 		return
 	}
 
@@ -157,11 +162,12 @@ func (simpleview *Simpleview) getOverview(c *gin.Context) {
 	if simpleview.CacheRequest.Sub(time.Now())*-1 > simpleview.CacheTimeout {
 		var overview Overview
 		hosts, err := simpleview.getHosts()
-		fmt.Print(err)
+		if simpleview.Debug {
+			fmt.Print(err)
+		}
 
 		if err != nil {
-			fmt.Printf("error: %v", err)
-			c.JSON(500, err)
+			c.JSON(500, fmt.Sprintf("error: %v", err))
 			return
 		}
 
@@ -169,8 +175,7 @@ func (simpleview *Simpleview) getOverview(c *gin.Context) {
 		services, err := simpleview.getServices()
 
 		if err != nil {
-			fmt.Printf("error: %v", err)
-			c.JSON(500, err)
+			c.JSON(500, fmt.Sprintf("error: %v", err))
 			return
 		}
 		overview.Services = services
@@ -214,6 +219,7 @@ func main() {
 	f.StringVar(&simpleview.IcingaUsername, "icingausername", "simpleview", "username to authenticate against icinga")
 	f.StringVar(&simpleview.IcingaPassword, "icingapassword", "password", "password")
 	f.StringVar(&simpleview.ProjectsList, "projects", "", "filter on this comma-sep. list of projects")
+	f.BoolVar(&simpleview.Debug, "debug", false, "turn on debug output")
 
 	simpleview.CacheTimeout = 30 * time.Second
 	simpleview.CacheRequest = time.Now().Add(-simpleview.CacheTimeout)
