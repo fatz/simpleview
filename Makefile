@@ -8,7 +8,7 @@ GODEP=$(GOTEST) -i
 GOFMT=gofmt -w
 
 TARGET=$(PWD)/target
-FILES="bindata_assetfs.go main.go"
+FILES=bindata_assetfs.go main.go
 
 req:
 	go get github.com/tools/godep
@@ -17,11 +17,12 @@ req:
 	godep restore
 
 build: req bindatafs
-	GOOS=linux GOARCH=amd64 $(GOBUILD) $(FILES) -o $(TARGET)/simpleview.linux.amd64
-	GOOS=darwin GOARCH=amd64 $(GOBUILD) $(FILES) -o $(TARGET)/simpleview.darwin.amd64
+	GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(TARGET)/simpleview.linux.amd64 $(FILES)
+	GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(TARGET)/simpleview.darwin.amd64 $(FILES)
 
 clean:
 	rm $(TARGET)/*
+	rm bindata_assetfs.go
 
 run:
 	go-bindata-assetfs -debug public
