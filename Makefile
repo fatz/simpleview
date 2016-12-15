@@ -16,8 +16,8 @@ req:
 	godep restore
 
 build: req bindatafs
-	GOOS=linux GOARCH=amd64 $(GOBUILD) -o $(TARGET)/simpleview.linux.amd64
-	GOOS=darwin GOARCH=amd64 $(GOBUILD) -o $(TARGET)/simpleview.darwin.amd64
+	GOOS=linux GOARCH=amd64 $(GOBUILD) bindata_assetfs.go main.go -o $(TARGET)/simpleview.linux.amd64
+	GOOS=darwin GOARCH=amd64 $(GOBUILD) bindata_assetfs.go main.go -o $(TARGET)/simpleview.darwin.amd64
 
 clean:
 	rm $(TARGET)/*
