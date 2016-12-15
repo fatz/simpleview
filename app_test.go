@@ -28,6 +28,18 @@ func TestSimple(t *testing.T) {
 	assert.Len(slice, 1, "Should have one entity")
 }
 
+func TestEmptyResult(t *testing.T) {
+
+	assert := assert.New(t)
+
+	var simpleview Simpleview
+	object := simpleview.buildEmptyResults()
+	results, err := object.Array("results")
+	assert.Nil(err, "Should generate no error")
+	assert.Len(results, 0, "Should have no entity")
+
+}
+
 func TestHost(t *testing.T) {
 
 	assert := assert.New(t)

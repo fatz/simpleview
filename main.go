@@ -42,6 +42,13 @@ func (simpleview *Simpleview) readJSON(jsonstring string) (iresp *jsonq.JsonQuer
 	return
 }
 
+// workaround for the new format of sending an error object
+// we simply build our own empty results
+func (simpleview *Simpleview) buildEmptyResults() (iresp *jsonq.JsonQuery) {
+	iresp, _ = simpleview.readJSON(`{"results": []}`)
+	return
+}
+
 func (simpleview *Simpleview) getRequest(urlString string, filter string) (iresp *jsonq.JsonQuery, err error) {
 	// encodedFilter, err := url.Parse(filter)
 	if err != nil {
@@ -75,6 +82,18 @@ func (simpleview *Simpleview) getRequest(urlString string, filter string) (iresp
 	if err != nil {
 		err = fmt.Errorf("Read error: %s\n\n %s", err, jsonstring)
 		return
+	}
+
+	// so lets check if we just get an error object
+	if resp.StatusCode == http.StatusNotFound {
+		_, err1 := iresp.Int("error")
+		_, err2 := iresp.String("status")
+
+		if err1 == nil && err2 == nil {
+			//we found an expected error object lets just return empty results
+			iresp = simpleview.buildEmptyResults()
+			return
+		}
 	}
 
 	return
@@ -141,6 +160,7 @@ func (simpleview *Simpleview) getOverview(c *gin.Context) {
 		fmt.Print(err)
 
 		if err != nil {
+			fmt.Printf("error: %v", err)
 			c.JSON(500, err)
 			return
 		}
@@ -149,6 +169,7 @@ func (simpleview *Simpleview) getOverview(c *gin.Context) {
 		services, err := simpleview.getServices()
 
 		if err != nil {
+			fmt.Printf("error: %v", err)
 			c.JSON(500, err)
 			return
 		}
