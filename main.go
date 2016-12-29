@@ -4,17 +4,18 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	assetfs "github.com/elazarl/go-bindata-assetfs"
-	"github.com/gin-gonic/contrib/static"
-	"github.com/gin-gonic/gin"
-	"github.com/jmoiron/jsonq"
-	"github.com/namsral/flag"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 	"time"
+
+	assetfs "github.com/elazarl/go-bindata-assetfs"
+	"github.com/gin-gonic/contrib/static"
+	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/jsonq"
+	"github.com/namsral/flag"
 )
 
 // Simpleview app
@@ -107,7 +108,7 @@ func (simpleview *Simpleview) getHosts() (jq []map[string]interface{}, err error
 	// filter := "host.last_hard_state>0&host.last_in_downtime==false&host.acknowledgement<2"
 	// filter := "host.last_hard_state>0"
 
-	filter := `host.last_hard_state%3E0%26%26host.last_in_downtime==false%26%26host.acknowledgement%3C2`
+	filter := `host.last_hard_state%3E0%26%26host.downtime_depth==0%26%26host.acknowledgement%3C2`
 
 	iresp, err := simpleview.getRequest(url, filter)
 	if err != nil {
@@ -132,7 +133,7 @@ func (simpleview *Simpleview) getServices() (jq []map[string]interface{}, err er
 	// filter := "host.last_hard_state>0&host.last_in_downtime==false&host.acknowledgement<2"
 	// filter := "host.last_hard_state>0"
 
-	filter := `host.state==HostUp%26%26service.last_hard_state%3E0%26%26service.acknowledgement%3C2%26%26service.last_in_downtime==false`
+	filter := `host.state==HostUp%26%26service.last_hard_state%3E0%26%26service.acknowledgement%3C2%26%26service.downtime_depth==0`
 
 	iresp, err := simpleview.getRequest(url, filter)
 	if err != nil {
