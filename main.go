@@ -108,7 +108,7 @@ func (simpleview *Simpleview) getHosts() (jq []map[string]interface{}, err error
 	// filter := "host.last_hard_state>0&host.last_in_downtime==false&host.acknowledgement<2"
 	// filter := "host.last_hard_state>0"
 
-	filter := `host.last_hard_state%3E0%26%26host.downtime_depth==0%26%26host.acknowledgement==0`
+	filter := `host.state==HostDown%26%26host.downtime_depth==0%26%26host.acknowledgement==0`
 
 	iresp, err := simpleview.getRequest(url, filter)
 	if err != nil {
